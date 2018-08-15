@@ -37,7 +37,7 @@ class economy:
             users = json.load(f)
         amount = int(amountEntered)
         balance = users[ctx.message.author.id]["balance"]
-        if ( balance >= amount and amount >= 10):
+        if ( balance >= amount and amount >= 5):
             result = self.runGamble(chance, 100)
             if result == True:
                 reward = amount*(scale)
@@ -122,6 +122,15 @@ class economy:
     @commands.command(pass_context=True)
     async def gambleHard(self, ctx, amountEntered):
         msg = self.gambleNow(ctx, amountEntered, 10, 3)
+        try:
+            await self.bot.send_message(ctx.message.channel,"<@!" + ctx.message.author.id + ">")
+            await self.bot.send_message(ctx.message.channel, embed = msg)
+        except Exception:
+            await self.bot.send_message(ctx.message.channel, msg)
+
+    @commands.command(pass_context=True)
+    async def gambleInsane(self, ctx, amountEntered):
+        msg = self.gambleNow(ctx, amountEntered, 1, 10)
         try:
             await self.bot.send_message(ctx.message.channel,"<@!" + ctx.message.author.id + ">")
             await self.bot.send_message(ctx.message.channel, embed = msg)

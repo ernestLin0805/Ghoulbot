@@ -77,6 +77,7 @@ async def help(ctx):
     embed.add_field(name="/gambleEasy #", value = "Gambles a certain amount with a 40 percent chance to win. If you win you get win 3/2 of your bet.")
     embed.add_field(name="/gambleMedium #", value = "Gambles a certain amount with a 20 percent chance to win. If you win you get win double of your bet.")
     embed.add_field(name="/gambleHard #", value = "Gambles a certain amount with a 10 percent chance to win. If you win you get win triple of your bet.")
+    embed.add_field(name="/gambleHard #", value = "Gambles a certain amount with a 1 percent chance to win. If you win you get win ten times of your bet amount.")
     embed.add_field(name="/helpMusic", value = "Displays commands for music bot")
     embed.add_field(name="/register", value = "Register into the rpg database.")
     await bot.say(embed=embed)
