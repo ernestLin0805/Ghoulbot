@@ -73,6 +73,7 @@ async def help(ctx):
     embed.add_field(name="/info", value="Reveals info about a specific user(mention the person after the command)", inline = True)
     embed.add_field(name="/kick", value = "Kicks a designated person(mention after command). You must have permission.")
     embed.add_field(name="/clear #", value = "Clears a certain number of messages.")
+    embed.add_field(name="/registerBank", value = "Register into the bank database.")
     embed.add_field(name="/balance", value = "Checks your current balance.")
     embed.add_field(name="/gambleEasy #", value = "Gambles a certain amount with a 40 percent chance to win. If you win you get win 3/2 of your bet.")
     embed.add_field(name="/gambleMedium #", value = "Gambles a certain amount with a 20 percent chance to win. If you win you get win double of your bet.")

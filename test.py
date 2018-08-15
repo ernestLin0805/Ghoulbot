@@ -31,7 +31,7 @@ class test:
             character.add_field(name = "Attack: ", value = "{}".format(stats[id]['Attack']))
             character.add_field(name = "Health: ", value = "{}".format(stats[id]['Health']))
             character.add_field(name = "Speed: ", value = "{}".format(stats[id]['Speed']))
-            await self.bot.send_file(ctx.message.channel, stats[id]["Picture"])
+            character.set_image(url = stats[id]["Picture"])
             await self.bot.send_message(ctx.message.channel, embed=character)
 def setup(bot):
     bot.add_cog(test(bot))

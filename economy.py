@@ -88,7 +88,13 @@ class economy:
         with open('users.json', 'w') as f:
             json.dump(users, f)
 
-
+    @commands.command(pass_context=True)
+    async def registerBank(self, ctx):
+        if not user.id in users:
+            self.update_data(users, ctx.message.author)
+            await self.bot.send_message("You are now registered in the bank with a starting value of 100 {}".format(self.currency_type))
+        else:
+            await self.bot.send_message("You are already in the database")
     @commands.command(pass_context = True)
     async def give(self, ctx, amountInput, user: discord.Member):
         if ctx.message.author.server_permissions.administrator == True:
@@ -101,6 +107,21 @@ class economy:
                 json.dump(users, f)
         else:
             await self.bot.send_message(ctx.message.channel, "You don't have the permission to do this.")
+
+    @commands.command(pass_context = True)
+    async def take(self, ctx, amountInput, user: discord.Member):
+        if ctx.message.author.server_permissions.administrator == True:
+            amount = int(amountInput)
+            with open('users.json', 'r') as f:
+                users = json.load(f)
+            self.subtract_money(users, user, amount)
+            await self.bot.send_message(ctx.message.channel, "{} {} has been taken from {}'s balance.".format(amount, self.currency_type, user.name))
+            with open('users.json', 'w') as f:
+                json.dump(users, f)
+        else:
+            await self.bot.send_message(ctx.message.channel, "You don't have the permission to do this.")
+
+
     @commands.command(pass_context=True)
     async def gambleEasy(self, ctx, amountEntered):
         msg = self.gambleNow(ctx, amountEntered, 40, (1/2))

@@ -1,6 +1,7 @@
 {
-    "Berserker": {"Price": 1000, "Attack": 40, "Health": 180, "Speed": 1, "Picture": "C:\\Users\\ernes\\OneDrive\\Pictures\\LinkCharacters\\Flamebreaker.png"},
-     "Assassin": {"Price": 1000, "Attack": 60, "Health":120, "Speed": 2,"Picture": "C:\\Users\\ernes\\OneDrive\\Pictures\\LinkCharacters\\Assasin.png"}, 
-    "Archer": {"Price": 1000, "Attack": 70, "Health": 100, "Speed": 1.5, "Picture": "C:\\Users\\ernes\\OneDrive\\Pictures\\LinkCharacters\\Archer.png"},
-     "Warrior": {"Price": 1000, "Attack": 30, "Health": 150, "Speed": 1, "Picture": "C:\\Users\\ernes\\OneDrive\\Pictures\\LinkCharacters\\Voe.png"}
+    "Berserker": {"Price": 1000, "Attack": 40, "Health": 180, "Speed": 1, "Picture": "https://cdn.discordapp.com/attachments/467451024655777804/479328694415130624/Flamebreaker.png"},
+     "Assassin": {"Price": 1000, "Attack": 60, "Health":120, "Speed": 2,"Picture": "https://cdn.discordapp.com/attachments/467451024655777804/479330329346310149/Assasin.png"}, 
+    "Archer": {"Price": 1000, "Attack": 70, "Health": 100, "Speed": 1.5, "Picture": "https://cdn.discordapp.com/attachments/467451024655777804/479343460525277185/Archer.png"},
+     "Warrior": {"Price": 1000, "Attack": 30, "Health": 150, "Speed": 1, "Picture": "https://cdn.discordapp.com/attachments/467451024655777804/479349202980306956/Voe.png"},
+     "Knight": {"Price": 1000, "Attack": 20, "Health": 200, "Speed": 1, "Picture": "https://cdn.discordapp.com/attachments/467451024655777804/479344248089608202/Knight.png"}
 }
