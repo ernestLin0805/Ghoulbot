@@ -42,9 +42,6 @@ class rpg:
         embed.set_image(url = "https://i.imgur.com/NCULLnm.gif")
         await self.bot.send_message(ctx.message.channel, embed = embed)
 
-    @commands.command(pass_context = True)
-    async def buy(self, ctx, className):
-        
 
 def setup(client):
     client.add_cog(rpg(client))
