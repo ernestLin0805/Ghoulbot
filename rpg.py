@@ -13,7 +13,7 @@ class rpg:
 
     @commands.command(pass_context = True)
     async def register(self, ctx):
-        with open ('stats.json', 'r') as f:
+        with open('stats.json', 'r') as f:
             stats = json.load(f)
         id = ctx.message.author.id
         if not id in stats:
@@ -45,20 +45,21 @@ class rpg:
 
     @commands.command(pass_context = True)
     async def buy(self, ctx, target):
-        with open('stats.json', 'w') as f:
+        with open('stats.json', 'r') as f:
             stats = json.load(f)
-        with open('users.json', 'w') as f2:
+        with open('users.json', 'r') as f2:
             users = json.load(f2)
-        with open('ClassesInfo.json') as f3:
+        with open('ClassesInfo.json', 'r') as f3:
             classes = json.load(f3)
         id = ctx.message.author.id
         balance = users[id]['balance']
-        if id in stats:
+        if id in stats and balance >= classes[target]['Price']:
             stats[id]["Class"] = target
             stats[id]["Attack"] = classes[target]["Attack"]
             stats[id]["Health"] = classes[target]["Health"]
             stats[id]["Speed"] = classes[target]["Speed"]
-            stats[id]["Photo"] = classes[target]["Photo"]
+            stats[id]["Picture"] = classes[target]["Picture"]
+            users[id]["balance"] -= classes[target]["Price"]
         elif not target in classes:
             await self.bot.send_message(ctx.message.channel, "Sorry, that class doesn't exist.(Check your spelling)")
         elif balance < classes[target]["Price"]:
@@ -67,6 +68,11 @@ class rpg:
             await self.bot.send_message(ctx.message.channel, "You are not registered in the database. Please type /register first.")
         elif not stats[id]["Class"] == "Caveman":
             await self.bot.send_message("You already have a class.")
+
+        with open('stats.json', 'w') as f:
+            json.dump(stats, f)
+        with open('users.json', 'w') as f2:
+            json.dump(users, f2)
 
             
 
