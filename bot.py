@@ -86,4 +86,4 @@ if __name__ == '__main__':
             bot.load_extension(extension)
         except Exception as error:
             print('{} cannot be loaded because {}'.format(extension, error))
-    bot.run("NDY3MTc3NDA4MTY0OTIxMzQ1.Dk-2xQ.jkX4KyB8qsHnw3FPpo5hZtCPOak")
+    bot.run("")
