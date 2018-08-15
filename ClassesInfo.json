@@ -1,0 +1,6 @@
+{
+    "Berserker": {"Price": 1000, "Attack": 40, "Health": 180, "Speed": 1, "Picture": "C:\\Users\\ernes\\OneDrive\\Pictures\\LinkCharacters\\Flamebreaker.png"},
+     "Assassin": {"Price": 1000, "Attack": 60, "Health":120, "Speed": 2,"Picture": "C:\\Users\\ernes\\OneDrive\\Pictures\\LinkCharacters\\Assasin.png"}, 
+    "Archer": {"Price": 1000, "Attack": 70, "Health": 100, "Speed": 1.5, "Picture": "C:\\Users\\ernes\\OneDrive\\Pictures\\LinkCharacters\\Archer.png"},
+     "Warrior": {"Price": 1000, "Attack": 30, "Health": 150, "Speed": 1, "Picture": "C:\\Users\\ernes\\OneDrive\\Pictures\\LinkCharacters\\Voe.png"}
+}
