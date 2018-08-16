@@ -2,10 +2,16 @@ import discord
 from discord.ext import commands
 import youtube_dl
 players = {}
+queues = {}
 class music:
     def __init__(self, bot):
         self.bot = bot
 
+    def check_queue(self, id):
+        if queues[id] != []:
+            player = queues[id].pop(0)
+            players[id] = player
+            player.start()
     @commands.command(pass_context = True)
     async def join(self, ctx):
         channel = ctx.message.author.voice.voice_channel
@@ -22,7 +28,7 @@ class music:
         self.bot.send_message(ctx.message.channel, "Loading...")
         server = ctx.message.server
         voice_client = self.bot.voice_client_in(server)
-        player = await voice_client.create_ytdl_player(url)
+        player = await voice_client.create_ytdl_player(url, after = lambda: self.check_queue(server.id))
         players[server.id] = player
         player.start()
 
@@ -49,8 +55,20 @@ class music:
         embed.add_field(name="/pause", value = "Pauses current playing music.", inline = True)
         embed.add_field(name = "/resume", value = "Resumes paused music.", inline = True)
         embed.add_field(name = "/stop", value = "Stops current music completely.")
+        embed.add_field(name = "/stop *youtube_url*", value = "Queues the youtube video.")
         embed.set_thumbnail(url = "https://yt3.ggpht.com/OgVV66t5vou1LkAbPh7yHbJA73Z2kKHs6-mFaeVFjnlU-pWESAPXFi-5pMASF7Mp1YLfoMdeI38v68U=s900-mo-c-c0xffffffff-rj-k-no")
         await self.bot.send_message(ctx.message.channel, embed = embed)
 
+    @commands.command(pass_context=True)
+    async def queue(self, ctx, url):
+        server = ctx.message.server
+        voice_client = self.bot.voice_client_in(server)
+        player = await voice_client.create_ytdl_player(url)
+
+        if server.id in queues:
+            queues[server.id].append(player)
+        else:
+            queues[server.id] = [player]
+        await self.bot.send_message(ctx.message.channel, "Video queued.")
 def setup(client):
     client.add_cog(music(client))
