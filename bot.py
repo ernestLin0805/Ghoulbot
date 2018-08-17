@@ -10,7 +10,7 @@ import youtube_dl
 bot = commands.Bot(command_prefix='/')
 bot.remove_command('help')
 
-extensions = ['economy', 'test', 'music', 'rpg']
+extensions = ['economy', 'test', 'music', 'RPG/rpg']
 players = {}
 
 @bot.event
@@ -81,6 +81,7 @@ async def help(ctx):
     embed.add_field(name="/helpMusic", value = "Displays commands for music bot")
     embed.add_field(name="/register", value = "Register into the rpg database.")
     await bot.say(embed=embed)
+
 if __name__ == '__main__':
     for extension in extensions:
         try:
