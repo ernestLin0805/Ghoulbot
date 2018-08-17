@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import json
 import os
-os.chdir(r'C:\Users\ernes\OneDrive\Desktop\GhoulbotBeta')
 
 
 class test:

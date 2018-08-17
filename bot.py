@@ -18,7 +18,6 @@ async def on_ready():
     print("I'm in")
 
 
-
 @bot.command(pass_context=True)
 async def kick(ctx, user: discord.Member):
     if user.top_role.id == "394313823244255242":#That's the owner

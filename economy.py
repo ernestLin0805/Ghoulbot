@@ -4,7 +4,6 @@ import json
 import asyncio
 import os
 import random
-os.chdir(r'C:\Users\ernes\OneDrive\Desktop\GhoulbotBeta')
 
 
 class economy:
