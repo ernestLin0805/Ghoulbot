@@ -11,6 +11,7 @@ class rpg:
         self.bot = bot
     currency_type = "<:wood:478383029891498006>"
 
+
     @commands.command(pass_context = True)
     async def register(self, ctx):
         with open('stats.json', 'r') as f:
@@ -91,7 +92,6 @@ class rpg:
             json.dump(stats, f)
         with open('users.json', 'w') as f2:
             json.dump(users, f2)
-
             
 
 def setup(client):

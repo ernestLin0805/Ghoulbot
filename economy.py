@@ -90,11 +90,16 @@ class economy:
 
     @commands.command(pass_context=True)
     async def registerBank(self, ctx):
+        with open('users.json', 'r') as f:
+            users = json.load(f)
+        user = ctx.message.author
         if not user.id in users:
             self.update_data(users, ctx.message.author)
-            await self.bot.send_message("You are now registered in the bank with a starting value of 100 {}".format(self.currency_type))
+            await self.bot.send_message(ctx.message.channel, "You are now registered in the bank with a starting value of 100 {}".format(self.currency_type))
         else:
-            await self.bot.send_message("You are already in the database")
+            await self.bot.send_message(ctx.message.channel, "You are already in the database")
+        with open('users.json', 'w') as f:
+            json.dump(users, f)
     @commands.command(pass_context = True)
     async def give(self, ctx, amountInput, user: discord.Member):
         if ctx.message.author.server_permissions.administrator == True:
@@ -102,7 +107,7 @@ class economy:
             with open('users.json', 'r') as f:
                 users = json.load(f)
             self.add_money(users, user, amount)
-            self.bot.send_message(ctx.message.channel, "{} {} has been added to {}'s balance.".format(amount, self.currency_type, user.name))
+            await self.bot.send_message(ctx.message.channel, "{} {} has been added to {}'s balance. {}'s new balance is {} {}.".format(amount, self.currency_type, user.name, user.name, users[user.id]['balance'], self.currency_type))
             with open('users.json', 'w') as f:
                 json.dump(users, f)
         else:
@@ -124,39 +129,52 @@ class economy:
 
     @commands.command(pass_context=True)
     async def gambleEasy(self, ctx, amountEntered):
-        msg = self.gambleNow(ctx, amountEntered, 40, (1/2))
         try:
-            await self.bot.send_message(ctx.message.channel, "<@!" + ctx.message.author.id + ">")
-            await self.bot.send_message(ctx.message.channel, embed = msg)
+            msg = self.gambleNow(ctx, amountEntered, 40, (1/2))
+            try:
+                await self.bot.send_message(ctx.message.channel, "<@!" + ctx.message.author.id + ">")
+                await self.bot.send_message(ctx.message.channel, embed = msg)
+            except Exception:
+                await self.bot.send_message(ctx.message.channel, msg)
         except Exception:
-            await self.bot.send_message(ctx.message.channel, msg)
-    
+            await self.bot.send_message(ctx.message.channel, "You can only bet with whole positive integers.")
+        
     @commands.command(pass_context=True)
     async def gambleMedium(self, ctx, amountEntered):
-        msg = self.gambleNow(ctx, amountEntered, 20, 2)
         try:
-            await self.bot.send_message(ctx.message.channel, "<@!" + ctx.message.author.id + ">")
-            await self.bot.send_message(ctx.message.channel, embed = msg)
+            msg = self.gambleNow(ctx, amountEntered, 20, 2)
+            try:
+                await self.bot.send_message(ctx.message.channel, "<@!" + ctx.message.author.id + ">")
+                await self.bot.send_message(ctx.message.channel, embed = msg)
+            except Exception:
+                await self.bot.send_message(ctx.message.channel, msg)
         except Exception:
-            await self.bot.send_message(ctx.message.channel, msg)
+            await self.bot.send_message(ctx.message.channel, "You can only bet with whole positive integers.")
 
     @commands.command(pass_context=True)
     async def gambleHard(self, ctx, amountEntered):
-        msg = self.gambleNow(ctx, amountEntered, 10, 3)
         try:
-            await self.bot.send_message(ctx.message.channel,"<@!" + ctx.message.author.id + ">")
-            await self.bot.send_message(ctx.message.channel, embed = msg)
+            msg = self.gambleNow(ctx, amountEntered, 10, 3)
+            try:
+                await self.bot.send_message(ctx.message.channel,"<@!" + ctx.message.author.id + ">")
+                await self.bot.send_message(ctx.message.channel, embed = msg)
+            except Exception:
+                await self.bot.send_message(ctx.message.channel, msg)
         except Exception:
-            await self.bot.send_message(ctx.message.channel, msg)
+                await self.bot.send_message(ctx.message.channel, "You can only bet with whole positive integers.")
 
     @commands.command(pass_context=True)
     async def gambleInsane(self, ctx, amountEntered):
-        msg = self.gambleNow(ctx, amountEntered, 1, 10)
         try:
-            await self.bot.send_message(ctx.message.channel,"<@!" + ctx.message.author.id + ">")
-            await self.bot.send_message(ctx.message.channel, embed = msg)
+
+            msg = self.gambleNow(ctx, amountEntered, 1, 10)
+            try:
+                await self.bot.send_message(ctx.message.channel,"<@!" + ctx.message.author.id + ">")
+                await self.bot.send_message(ctx.message.channel, embed = msg)
+            except Exception:
+                await self.bot.send_message(ctx.message.channel, msg)
         except Exception:
-            await self.bot.send_message(ctx.message.channel, msg)
+            await self.bot.send_message(ctx.message.channel, "You can only bet with whole positive integers.")
     #async def on_message(self, message):
         #with open('users.json', 'r') as f:
             #users = json.load(f)
