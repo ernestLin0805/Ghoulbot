@@ -9,10 +9,10 @@ import youtube_dl
 
 bot = commands.Bot(command_prefix='/')
 bot.remove_command('help')
-os.chdir(r'C:\Users\ernes\OneDrive\Desktop\GhoulbotBeta')
-os.chdir(r'C:\Users\ernes\OneDrive\Pictures\LinkCharacters')
+
 extensions = ['economy', 'test', 'music', 'rpg']
 players = {}
+
 @bot.event
 async def on_ready():
     print("I'm in")
@@ -48,7 +48,7 @@ async def clear(ctx, amount=100):
 @bot.command(pass_context = True)
 async def test(ctx):
     channel = ctx.message.channel
-    await bot.send_file(channel, r'C:\Users\ernes\OneDrive\Pictures\LinkCharacters\Assasin.png')
+    await bot.send_file(channel, os.getcwd() + r'\LinkCharacters\Assasin.png')
 
 @bot.event
 async def on_message_delete(message):
