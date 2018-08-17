@@ -10,7 +10,7 @@ import youtube_dl
 bot = commands.Bot(command_prefix='/')
 bot.remove_command('help')
 
-extensions = ['economy', 'test', 'music', 'RPG/rpg']
+extensions = ['economy', 'test', 'music', 'rpg']
 players = {}
 
 @bot.event
@@ -85,7 +85,10 @@ async def help(ctx):
 if __name__ == '__main__':
     for extension in extensions:
         try:
-            bot.load_extension(extension)
+            if(extension == 'rpg'):
+                bot.load_extension(f"RPG.{extension}")
+            else:
+                bot.load_extension(extension)
         except Exception as error:
             print('{} cannot be loaded because {}'.format(extension, error))
     with open('key.json', 'r') as f:

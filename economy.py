@@ -7,8 +7,7 @@ import random
 
 
 class economy:
-
-
+    
     def __init__(self, bot):
         self.bot = bot
         
@@ -60,7 +59,6 @@ class economy:
             return "You must bet at least 5 {}".format(self.currency_type)
         else:
             return "Lol you don't have that much {}. You only have {}{}".format(self.currency_type, users[ctx.message.author.id]["balance"], self.currency_type)
-
 
     async def on_member_join(self, member):
         with open('users.json', 'r') as f:
