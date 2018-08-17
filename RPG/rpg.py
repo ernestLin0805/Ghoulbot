@@ -2,14 +2,13 @@ import discord
 from discord.ext import commands
 import json
 import os
-
+import RPG
 
 class rpg:
 
     def __init__(self, bot):
         self.bot = bot
     currency_type = "<:wood:478383029891498006>"
-
 
     @commands.command(pass_context = True)
     async def register(self, ctx):
@@ -22,7 +21,7 @@ class rpg:
             stats[id]['Attack'] = 10
             stats[id]['Health'] = 100
             stats[id]['Speed'] = 1
-            stats[id]['Picture'] = r'C:\Users\ernes\OneDrive\Pictures\LinkCharacters\LinkDefault.png'
+            stats[id]['Picture'] = os.getcwd() + r'\LinkCharacters\LinkDefault.png'
             embed = discord.Embed(title = "{}".format(ctx.message.author.name), description = 'Class: {}'.format(stats[id]['Class']))
             embed.add_field(name = "Attack: ", value = "{}".format(str(stats[id]['Attack'])))
             embed.add_field(name = "Health: ", value = "{}".format(stats[id]['Health']))
@@ -55,6 +54,7 @@ class rpg:
             embed.add_field(name = "Speed", value = "{}".format(classes[item]["Speed"]))
             embed.set_image(url = "{}".format(classes[item]["Picture"]))
             await self.bot.send_message(ctx.message.author, embed = embed)
+
     @commands.command(pass_context = True)
     async def buy(self, ctx, target):
         with open('stats.json', 'r') as f:
