@@ -184,9 +184,78 @@ class economy:
         #with open('users.json', 'w') as f:
                 #json.dump(users, f)
 
+    @commands.command(pass_context = True)
+    async def bet(self, ctx, user: discord.Member, amountEntered):
+        amount = int(amountEntered)
+        channel = ctx.message.channel
+        memes = []
+        userpoint = 0
+        victimpoint = 0
+        with open('users.json', 'r') as f:
+            users = json.load(f)
+        if users[ctx.message.author.id]["balance"] < amount or users[user.id]["balance"] < amount:
+            await self.bot.send_message(channel, "One of you do not have enough to bet this much money.")
+        elif amount < 4:
+            await self.bot.send_message(channel, "You have to bet at least 5 {}".format(self.currency_type))
+        else:
+            await self.bot.send_message(channel, "<@!" + user.id + "> {} has challenged you to a bet for {}. Do you accept?(y/n)".format(ctx.message.author.name, amountEntered))
+            answer = await self.bot.wait_for_message(timeout = 15, author = user)
+            if answer.content == None:
+                await self.bot.send_message(channel, "The request is expired.")
+            elif answer.content.lower() == "y" or answer.content.lower() == "yes":
+                await self.bot.send_message(channel, "Alright! The bet between {} and {} has begun! {} please choose one of the following!(Just type the name. No need for /) ".format(ctx.message.author.name, user.name, ctx.message.author.name))
+                daWae = discord.Embed(title = "Da wae", description = "", colour = discord.Colour.green())
+                daWae.set_thumbnail(url = "https://img00.deviantart.net/cb63/i/2018/011/4/1/ugandan_knuckles_vector_by_surizarin-dbzp0gi.png")
+                memes.append(daWae)
+                harambe = discord.Embed(title = "Harambe", description = "", colour = discord.Colour.red())
+                harambe.set_thumbnail(url = "http://www.stickpng.com/assets/thumbs/584877837b758d6b0758d00d.png")
+                memes.append(harambe)
+                doge = discord.Embed(title = "Dodge", colour = discord.Colour.blue())
+                doge.set_thumbnail(url = "https://t6.rbxcdn.com/cd4b72933eae9505c1cff2277029d3b3")
+                memes.append(doge)
+                for item in memes:
+                    await self.bot.send_message(channel, embed = item)
+                answer = await self.bot.wait_for_message(timeout = 15, author = ctx.message.author, channel = channel)
+                userchoice = answer.content.lower()
+                memes.remove(answer.content)
+                self.bot.send_message(channel, "Alrighty! Now it's {}'s turn!(Just type the name. No need for /.".format(user.name))
+                for item in memes:
+                    await self.bot.send_message(channel, embed = item)
+                answer = await self.bot.wait_for_message(timeout = 15, author = user, channel = channel)
+                victimchoice = answer.content.lower()
+                self.bot.send_message(channel, "Shuffling dead memes...")
+                choices = ["da wae", "harambe", "doge"]
+                while userpoint == 0 and victimpoint == 0:
+                    for item in choices:
+                        temp = random.choice(choices)
+                        self.bot.send_message(channel, "I drew a: {}".format(temp))
+                        if temp == userchoice:
+                            userpoint += 1
+                        elif temp == victimchoice:
+                            victimpoint += 1
+                    if userpoint == 0 and victimpoint == 0:
+                        self.bot.send_message("No one won. I'll draw again!")
+                if userpoint > victimpoint:
+                    self.bot.send_message("{} wins with {} points!".format(ctx.message.author.name, userpoint))
+                    self.add_money(users, ctx.message.author, amount)
+                    self.subtract_money(users, user, amount)
+                    self.bot.send_message("{} now has {} {}, while {} has {} {}".format(ctx.message.author.name, users[ctx.message.author.id]['balance'], self.currency_type,user.name, users[user.id]['balance'], self.currency_type))
+                else:
+                    self.bot.send_message("{} wins with {} points!".format(user.name, victimpoint))
+                    self.add_money(users, user, amount)
+                    self.subtract_money(users, ctx.message.author, amount)
+                    self.bot.send_message("{} now has {} {}, while {} has {} {}".format(user.name, users[user.id]['balance'], self.currency_type, ctx.message.author.name, users[ctx.message.author.id]['balance'], self.currency_type))
+            with open('users.json', 'w') as f:
+                json.dump(users, f)
+                
+                
+
+                    
+
+
+
 
     
-        
     def add_money(self, users, user, money):
         users[user.id]['balance'] += money
 
