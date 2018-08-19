@@ -16,8 +16,6 @@ players = {}
 @bot.event
 async def on_ready():
     print("I'm in")
-
-
 @bot.command(pass_context=True)
 async def kick(ctx, user: discord.Member):
     if user.top_role.id == "394313823244255242":#That's the owner
@@ -56,12 +54,9 @@ async def on_message_delete(message):
         await bot.send_message(discord.Object(id='467451291980005376'), fmt.format(message))
     except Exception as error:
         await bot.say("{}".format(error))
-
-
 @bot.event
 async def on_member_remove(member):
     await bot.say("{} has left the discord".format(member.name))
-
 @bot.command(pass_context=True)
 async def help(ctx):
     embed = discord.Embed(
