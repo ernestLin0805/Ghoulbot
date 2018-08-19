@@ -69,6 +69,7 @@ async def help(ctx):
     embed.add_field(name="/clear #", value = "Clears a certain number of messages.")
     embed.add_field(name="/registerBank", value = "Register into the bank database.")
     embed.add_field(name="/balance", value = "Checks your current balance.")
+    embed.add_field(name="/bet @person #", value = "Challenges a person to a bet. Winner takes the amount from the loser.")
     embed.add_field(name="/gambleEasy #", value = "Gambles a certain amount with a 40 percent chance to win. If you win you get win 3/2 of your bet.")
     embed.add_field(name="/gambleMedium #", value = "Gambles a certain amount with a 20 percent chance to win. If you win you get win double of your bet.")
     embed.add_field(name="/gambleHard #", value = "Gambles a certain amount with a 10 percent chance to win. If you win you get win triple of your bet.")
