@@ -258,6 +258,8 @@ class economy:
                     self.add_money(users, user, amount)
                     self.subtract_money(users, ctx.message.author, amount)
                     await self.bot.send_message(channel, "{} now has {} {}, while {} has {} {}".format(user.name, users[user.id]['balance'], self.currency_type, ctx.message.author.name, users[ctx.message.author.id]['balance'], self.currency_type))
+            else:
+                await self.bot.send_message(channel, "The bet is off.")
             with open('users.json', 'w') as f:
                 json.dump(users, f)
                 
