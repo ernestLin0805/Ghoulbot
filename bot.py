@@ -12,7 +12,7 @@ bot.remove_command('help')
 
 extensions = ['economy', 'test', 'music', 'rpg']
 players = {}
-
+currency_type = "<:wood:478383029891498006>"
 @bot.event
 async def on_ready():
     print("I'm in")
@@ -47,6 +47,39 @@ async def test(ctx):
     channel = ctx.message.channel
     await bot.send_file(channel, os.getcwd() + r'\LinkCharacters\Assasin.png')
 
+@bot.command(pass_context = True)
+async def rank(ctx):
+    with open('users.json', 'r') as f1:
+        users = json.load(f1)
+    first = 0
+    firstid = ""
+    second = 0
+    secondid = ""
+    third = 0
+    thirdid = ""
+    for item in users:
+        balance = users[item]['balance']
+        if balance > first:
+            first = balance
+            firstid = item
+        elif balance < first and balance > second:
+            second = balance
+            secondid = item
+        elif balance < first and balance < second and balance > third:
+            third = balance
+            thirdid = item
+    server = ctx.message.server
+    firstName = server.get_member(firstid).name
+    secondName = server.get_member(secondid).name
+    thirdName = server.get_member(thirdid).name
+    display1 = discord.Embed(title = "Ranking", colour = discord.Colour.green())
+    display1.add_field(name = "#1: {}".format(firstName), value = "{} {}".format(first, currency_type), inline = True)
+    display1.add_field(name = "#2: {}".format(secondName), value = "{} {}".format(second, currency_type), inline = True)
+    display1.add_field(name = "#3: {}".format(thirdName), value = "{} {}".format(third, currency_type), inline = True)
+    display1.set_thumbnail(url = "https://poetsandquants.com/wp-content/uploads/2017/11/Rankingillo.jpeg")
+    await bot.send_message(ctx.message.channel, embed = display1)
+    
+
 @bot.event
 async def on_message_delete(message):
     try:
@@ -69,6 +102,7 @@ async def help(ctx):
     embed.add_field(name="/clear #", value = "Clears a certain number of messages.")
     embed.add_field(name="/registerBank", value = "Register into the bank database.")
     embed.add_field(name="/balance", value = "Checks your current balance.")
+    embed.add_field(name="/rank", value = "Displays the top three richest people in the discord")
     embed.add_field(name="/bet @person #", value = "Challenges a person to a bet. Winner takes the amount from the loser.")
     embed.add_field(name="/gambleEasy #", value = "Gambles a certain amount with a 40 percent chance to win. If you win you get win 3/2 of your bet.")
     embed.add_field(name="/gambleMedium #", value = "Gambles a certain amount with a 20 percent chance to win. If you win you get win double of your bet.")
