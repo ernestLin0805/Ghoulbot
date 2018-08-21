@@ -92,9 +92,9 @@ class economy:
         user = ctx.message.author
         if not user.id in users:
             self.update_data(users, ctx.message.author)
-            await self.bot.send_message(ctx.message.channel, "You are now registered in the bank with a starting value of 100 {}".format(self.currency_type))
+            await self.bot.send_message(ctx.message.channel, "You are now registered in the bank with a starting value of 100 {}.".format(self.currency_type))
         else:
-            await self.bot.send_message(ctx.message.channel, "You are already in the database")
+            await self.bot.send_message(ctx.message.channel, "You are already in the database. Type /balance to see.")
         with open('users.json', 'w') as f:
             json.dump(users, f)
     @commands.command(pass_context = True)
@@ -212,28 +212,47 @@ class economy:
                 await self.bot.send_message(channel, "Alright! The bet between {} and {} has begun! <@!".format(ctx.message.author.name, user.name) + ctx.message.author.id + ">please choose one of the following!(Just type the name. No need for /) ")
                 dawae = discord.Embed(title = "Dawae", description = "No spaces!", colour = discord.Colour.green())
                 dawae.set_thumbnail(url = "https://img00.deviantart.net/cb63/i/2018/011/4/1/ugandan_knuckles_vector_by_surizarin-dbzp0gi.png")
-                memes.append(dawae)
                 harambe = discord.Embed(title = "Harambe", description = "", colour = discord.Colour.red())
                 harambe.set_thumbnail(url = "http://www.stickpng.com/assets/thumbs/584877837b758d6b0758d00d.png")
-                memes.append(harambe)
                 doge = discord.Embed(title = "Doge", colour = discord.Colour.blue())
                 doge.set_thumbnail(url = "https://t6.rbxcdn.com/cd4b72933eae9505c1cff2277029d3b3")
+                memes.append(harambe)
+                memes.append(dawae)
                 memes.append(doge)
                 for item in memes:
                     await self.bot.send_message(channel, embed = item)
-                answer = await self.bot.wait_for_message(timeout = 15, author = ctx.message.author, channel = channel)
+                answer = await self.bot.wait_for_message(author = ctx.message.author, channel = channel)
                 userchoice = answer.content.lower()
-                if userchoice == "dawae":
-                    memes.remove(dawae)
-                elif userchoice == "harambe":
-                    memes.remove(harambe)
-                elif userchoice == "doge":
-                    memes.remove(doge)
+                while True:
+                    if userchoice == "dawae":
+                        memes.remove(dawae)
+                        break
+                    elif userchoice == "harambe":
+                        memes.remove(harambe)
+                        break
+                    elif userchoice == "doge":
+                        memes.remove(doge)
+                        break
+                    else:
+                        await self.bot.send_message(channel, "Invalid input. Please check your spelling and enter again.")
+                        answer = await self.bot.wait_for_message(author = ctx.message.author, channel = channel)
+                        userchoice = answer.content.lower()
                 for item in memes:
                     await self.bot.send_message(channel, embed = item)
-                await self.bot.send_message(channel, "Alrighty! Now it's <@!" + user.id + "> turn!(Just type the name. No need for /.")
-                secondanswer = await self.bot.wait_for_message(timeout = 15, author = user, channel = channel)
+                await self.bot.send_message(channel, "Alrighty! Now it's <@!" + user.id + "> turn!(Just type the name. No need for /.)")
+                secondanswer = await self.bot.wait_for_message(author = user, channel = channel)
                 victimchoice = secondanswer.content.lower()
+                while True:
+                    if victimchoice == "dawae":
+                        break
+                    elif victimchoice == "harambe":
+                        break
+                    elif victimchoice == "doge":
+                        break
+                    else:
+                        await self.bot.send_message(channel, "Invalid input. Please check your spelling and enter again.")
+                        answer = await self.bot.wait_for_message(author = ctx.message.author, channel = channel)
+                        victimchoice = answer.content.lower()
                 await self.bot.send_message(channel, "Shuffling dead memes...")
                 choices = ["dawae", "harambe", "doge"]
                 while userpoint == victimpoint:
