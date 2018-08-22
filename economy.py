@@ -205,7 +205,7 @@ class economy:
             await self.bot.send_message(channel, "You have to bet at least 5 {}".format(self.currency_type))
         else:
             await self.bot.send_message(channel, "<@!" + user.id + "> {} has challenged you to a bet for {}. Do you accept?(y/n)".format(ctx.message.author.name, amountEntered))
-            answer = await self.bot.wait_for_message(timeout = 15, author = user)
+            answer = await self.bot.wait_for_message(timeout = 30, author = user)
             if answer == None:
                 await self.bot.send_message(channel, "The request is expired.")
             elif answer.content.lower() == "y" or answer.content.lower() == "yes":
@@ -251,7 +251,7 @@ class economy:
                         break
                     else:
                         await self.bot.send_message(channel, "Invalid input. Please check your spelling and enter again.")
-                        answer = await self.bot.wait_for_message(author = ctx.message.author, channel = channel)
+                        answer = await self.bot.wait_for_message(author = user, channel = channel)
                         victimchoice = answer.content.lower()
                 await self.bot.send_message(channel, "Shuffling dead memes...")
                 choices = ["dawae", "harambe", "doge"]
