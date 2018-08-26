@@ -114,7 +114,7 @@ class mafia:
             for item in self.partyL:
                 await self.bot.send_message(channel, "<@!" + item + ">")
             intro = discord.Embed(title = "Welcome to Mafia!", description = "If you haven't read the rules yet, please type /helpM to view them in your dm!", colour = discord.Colour.dark_purple())
-            intro.set_image(url = "https://openclipart.org/download/292710/Gangster.svg")
+            intro.set_thumbnail(url = "https://pre00.deviantart.net/5183/th/pre/i/2018/011/f/5/league_of_legends___mafia_miss_fortune_by_snatti89-dbznniv.jpg")
             await self.bot.send_message(channel, embed = intro)
             await asyncio.sleep(3)
 
