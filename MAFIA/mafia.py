@@ -82,7 +82,7 @@ class mafia:
         await self.bot.send_message(self.doctor, "You are the doctor. Your job is to save people. But you can't save the same person twice in a row.")
         await self.bot.send_message(self.detective, "You are the Detective. Your job is to find the Mafia.")
 
-        chance = randInt(10, 100)
+        chance = self.randInt(10, 100)
         if chance == True:
             self.politician = prep.prepare.setPolitician()
             await self.bot.send_message(self.politician, "You are the Politician. You're just another villager but you can accept bribe from Mafia to be on his side. Sounds fun. And realistic.")
