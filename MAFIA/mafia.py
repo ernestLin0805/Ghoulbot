@@ -14,7 +14,6 @@ class mafia:
     gameOn = False
     ready = False
 
-    partyL = []  #ID
     mafiaList = [] #Names 
     DDList = [] #Names
     liveList = [] #names
@@ -34,31 +33,25 @@ class mafia:
     werewolf = [] #id
     politician = None #id
 
-
     @commands.command(pass_context = True)
     async def joinP(self, ctx):
-        if not ctx.message.author.id in self.partyL:
-            server = ctx.message.server
-            self.partyL.append(ctx.message.author.id)
+        if not ctx.message.author in self.mafiaPlayers.keys():
             self.mafiaPlayers[ctx.message.author] = "" # add author to dictionary
 
             await self.bot.send_message(ctx.message.channel, "You have been added to the list.")
             embed = discord.Embed(title = "Mafia Party:".format(), colour = discord.Colour.purple())
             server = ctx.message.server
-            for item in self.partyL:
-                embed.add_field(name = "Player:", value = "{}".format(server.get_member(item).name), inline = True)
+            for player in self.mafiaPlayers.keys():
+                embed.add_field(name = "Player:", value = "{}".format(player.name), inline = True)
             await self.bot.send_message(ctx.message.channel, embed = embed)
         else:
             await self.bot.send_message(ctx.message.channel, "You are already in the party.")
 
-
     @commands.command(pass_context = True)
     async def leaveP(self, ctx):
-        if not ctx.message.author.id in self.partyL:
+        if not ctx.message.author in self.mafiaPlayers.keys():
             await self.bot.send_message(ctx.message.channel, "You are not in the party.")
         else:
-            self.partyL.remove(ctx.message.author.id)
-
             self.mafiaPlayers.pop(ctx.message.author, None)
             await self.bot.send_message(ctx.message.channel, "You have left the party.")
 
@@ -67,13 +60,13 @@ class mafia:
         server = ctx.message.server
         embed = discord.Embed(title = "Mafia Party:".format(), colour = discord.Colour.purple())
         server = ctx.message.server
-        for item in self.partyL:
-            embed.add_field(name = "Player:", value = "{}".format(server.get_member(item).name), inline = True)
+        for player in self.mafiaPlayers.keys():
+            embed.add_field(name = "Player:", value = "{}".format(player.name), inline = True)
         await self.bot.send_message(ctx.message.channel, embed = embed)
 
     @commands.command(pass_context = True)
     async def setGame(self, ctx):
-        #if len(self.partyL) < 5:
+        #if len(self.mafiaPlayers) < 5:
             #await self.bot.send_message(ctx.message.channel, "Sorry. You need at least 5 people to play the game. You only have {} players.".format(len(self.partyL)))
         #else:
         server = ctx.message.server
@@ -89,7 +82,7 @@ class mafia:
             if(data.roleName == 'mafia'):
                 await self.bot.send_message(player, "You are the Mafia. Your job is to kill everyone. Pretty simple.")
             elif(data.roleName == 'doctor'):
-                await self.bot.send_message(player, "You are the doctor. Your job is to save people. But you can't save the same person twice in a row.")
+                await self.bot.send_message(player, "You are the Doctor. Your job is to save people. But you can't save the same person twice in a row.")
             elif(data.roleName == 'detective'):
                 await self.bot.send_message(player, "You are the Detective. Your job is to find the Mafia.")
             elif(data.roleName == 'politician'):
@@ -97,7 +90,6 @@ class mafia:
         
         await self.bot.create_channel(server, "mafia")
         await self.bot.send_message(ctx.message.channel, "Everything's ready! Type /start to start the game!")
-
 
     @commands.command(pass_context = True)
     async def deleteMafia(self, ctx):
@@ -118,8 +110,8 @@ class mafia:
             doctorUser = server.get_member(self.doctor)
             detectiveUser = server.get_member(self.detective)
             channel = self.findChannel(server)
-            for item in self.partyL:
-                await self.bot.send_message(channel, "<@!" + item + ">")
+            for player in self.mafiaPlayers.keys():
+                await self.bot.send_message(channel, player.mention)
             intro = discord.Embed(title = "Welcome to Mafia!", description = "If you haven't read the rules yet, please type /helpM to view them in your dm!", colour = discord.Colour.dark_purple())
             intro.set_thumbnail(url = "https://pre00.deviantart.net/5183/th/pre/i/2018/011/f/5/league_of_legends___mafia_miss_fortune_by_snatti89-dbznniv.jpg")
             await self.bot.send_message(channel, embed = intro)
@@ -130,23 +122,12 @@ class mafia:
             await asyncio.sleep(1)
 
             #Mafia turn
-            await self.bot.send_message(channel, "Mafia please check your dm.")
-            await self.bot.send_message(mafiaUser, "Who is your target?(Just type the name. Include any spaces and numbers.)")
-            embed = self.displayMember(server, self.mafiaList)
-            await self.bot.send_message(mafiaUser, embed = embed)
-            answer = await self.bot.wait_for_message(author = mafiaUser, channel = mafiaUser)
-            while True:
-                if answer.content.lower() in self.liveList:
-                    self.victim = answer.content()
-                    await self.bot.send_message(channel, "Got it")
-                    break
-                else:
-                    await self.bot.send_message(mafiaUser, "Error. Make sure your spelling is correct and you include the whole name(including numbers). Also no /.")
-                    answer = await self.bot.wait_for_message(author = mafiaUser, channel = mafiaUser)
+            self.MafiaTurn(ctx)
+
             
             #Doctor turn
-            await self.bot.send_message(channel, "Doctor please check your dm.")
-            await self.bot.send_message(doctorUser, "Who do you want to save?(Just type the name)")
+            await self.bot.send_message(channel, "Doctor please check your DMs.")
+            await self.bot.send_message(doctorUser, "Who do you want to save? (Just type the name)")
             embed = self.displayMember(server, self.DDList)
             await self.bot.send_message(doctorUser, embed = embed)
             answer = await self.bot.wait_for_message(author = doctorUser, channel = doctorUser)
@@ -159,8 +140,8 @@ class mafia:
                     answer = await self.bot.wait_for_message(author = doctorUser, channel = doctorUser)
             
             #Detective turn
-            await self.bot.send_message(channel, "Got it. Detective please check your dm.")
-            await self.bot.send_message(detectiveUser, "Who do you suspect?(Just type the name)")
+            await self.bot.send_message(channel, "Got it. Detective please check your DMs.")
+            await self.bot.send_message(detectiveUser, "Who do you suspect? (Just type the name)")
             self.displayMember(server, self.DDList)
             await self.bot.send_message(detectiveUser, embed = embed)
             answer = await self.bot.wait_for_message(author = detectiveUser, channel = detectiveUser)
@@ -231,13 +212,11 @@ class mafia:
                         largestVote = item
                 if largestVote != 0:
                     deadGuy = scoreName[score.index(largestVote)]
-                    await self.bot.send_message(channel, "{} has been hanged by the village. Prss f to pay respect.".format(deadGuy))
+                    await self.bot.send_message(channel, "{} has been hanged by the village. Press f to pay respect.".format(deadGuy))
                     self.liveList.remove(deadGuy)
                 else:
-                    await self.bot.send_message(channel, "No one was hanged.")        
+                    await self.bot.send_message(channel, "No one was hanged.")
 
-
-    
     @commands.command(pass_context = True)
     async def helpM(self, ctx):
         embed = discord.Embed(title = "Mafia Commands", colour = discord.Colour.orange())
@@ -266,6 +245,29 @@ class mafia:
         embed.add_field(name = "/inspect #", value = "Detective's command. A list of people will be shown with assigned numbers.", inline = False)
         await self.bot.send_message(ctx.message.author, embed = embed)
 
+    def MafiaTurn(self, ctx):
+        
+        mafiaList = []
+        for player, data in self.mafiaPlayers.items():
+            if(data.roleName == 'mafia'):
+                mafiaList.append(player)
+        
+        mafiaKillVote = {}
+        for player in mafiaList:
+            self.bot.send_message(player, 'Vote for a player to kill! (The vote must be unanimous)')
+            self.bot.send_message(player, "Who is your target? (Just type the name. Include any spaces and numbers.)")
+            embed = self.displayMember(ctx.message.channel, self.mafiaList)
+            self.bot.send_message(player, embed = embed)
+            answer = self.bot.wait_for_message(author = player, channel = player)
+            while True:
+                if answer.content.lower() in self.liveList:
+                    self.victim = answer.content()
+                    self.bot.send_message(ctx.message.channel, "Got it")
+                    break
+                else:
+                    self.bot.send_message(player, "Error. Make sure your spelling is correct and you include the whole name(including numbers). Also no /.")
+                    answer = self.bot.wait_for_message(author = player, channel = player)
+
     def findChannel(self, server):
         for item in server.channels:
             if item.name == 'mafia':
@@ -288,5 +290,6 @@ class mafia:
             name = server.get_member(item)
             embed.add_field(name = "{}".format(name), value = "Kill me!", inline = False)
         return embed
+
 def setup(bot):
     bot.add_cog(mafia(bot))
