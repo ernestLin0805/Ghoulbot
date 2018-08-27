@@ -3,10 +3,10 @@ from discord.ext import commands
 import asyncio
 import os
 import random
-import MAFIA
-from MAFIA import story
-from MAFIA import prep
-from MAFIA import gvar
+import MAFIA.story as story
+import MAFIA.prep as prep
+import MAFIA.gvar as gvar
+
 class mafia:
     def __init__(self, bot):
         self.bot = bot
@@ -14,23 +14,25 @@ class mafia:
     gameOn = False
     ready = False
 
-    partyL = []#ID
-    mafiaList = []#Names 
-    DDList = []#Names
-    liveList = []#names
+    partyL = []  #ID
+    mafiaList = [] #Names 
+    DDList = [] #Names
+    liveList = [] #names
     nominateList = []
     mChannel = None
+
+    mafiaPlayers = {}
 
     victim = None
     healVictim = None
     pastHeal = None
 
-    mafia = None#user
-    doctor = None#user
-    detective = None#user
-    villagers = []#id
-    werewolf = []#id
-    politician = None#id
+    mafia = None #user
+    doctor = None #user
+    detective = None #user
+    villagers = [] #id
+    werewolf = [] #id
+    politician = None #id
 
 
     @commands.command(pass_context = True)
@@ -38,6 +40,8 @@ class mafia:
         if not ctx.message.author.id in self.partyL:
             server = ctx.message.server
             self.partyL.append(ctx.message.author.id)
+            self.mafiaPlayers[ctx.message.author] = "" # add author to dictionary
+
             await self.bot.send_message(ctx.message.channel, "You have been added to the list.")
             embed = discord.Embed(title = "Mafia Party:".format(), colour = discord.Colour.purple())
             server = ctx.message.server
@@ -54,6 +58,8 @@ class mafia:
             await self.bot.send_message(ctx.message.channel, "You are not in the party.")
         else:
             self.partyL.remove(ctx.message.author.id)
+
+            self.mafiaPlayers.pop(ctx.message.author, None)
             await self.bot.send_message(ctx.message.channel, "You have left the party.")
 
     @commands.command(pass_context = True)
@@ -73,23 +79,24 @@ class mafia:
         server = ctx.message.server
         self.ready = True
         self.gameOn = True
-        
-        prep.prepare(self.bot, self.partyL)
-        self.mafia = prep.prepare.setMafia()
-        self.doctor = prep.prepare.setDoctor()
-        self.detective = prep.prepare.setDet()
-        await self.bot.send_message(self.mafia, "You are the Mafia. Your job is to kill everyone. Pretty simple.")
-        await self.bot.send_message(self.doctor, "You are the doctor. Your job is to save people. But you can't save the same person twice in a row.")
-        await self.bot.send_message(self.detective, "You are the Detective. Your job is to find the Mafia.")
 
-        chance = self.randInt(10, 100)
-        if chance == True:
-            self.politician = prep.prepare.setPolitician()
-            await self.bot.send_message(self.politician, "You are the Politician. You're just another villager but you can accept bribe from Mafia to be on his side. Sounds fun. And realistic.")
+        prepObj = prep.prepare(self.bot, self.mafiaPlayers)
+        prepObj.assignRoles()
+        # Finished settings roles
+
+        # Inform player of roles
+        for player, data in self.mafiaPlayers.items():
+            if(data.roleName == 'mafia'):
+                await self.bot.send_message(player, "You are the Mafia. Your job is to kill everyone. Pretty simple.")
+            elif(data.roleName == 'doctor'):
+                await self.bot.send_message(player, "You are the doctor. Your job is to save people. But you can't save the same person twice in a row.")
+            elif(data.roleName == 'detective'):
+                await self.bot.send_message(player, "You are the Detective. Your job is to find the Mafia.")
+            elif(data.roleName == 'politician'):
+                await self.bot.send_message(player, "You are the Politician. You're just another villager but you can accept bribe from Mafia to be on his side. Sounds fun. And realistic.")
+        
         await self.bot.create_channel(server, "mafia")
         await self.bot.send_message(ctx.message.channel, "Everything's ready! Type /start to start the game!")
-        
-        
 
 
     @commands.command(pass_context = True)
@@ -97,7 +104,7 @@ class mafia:
         try:
             server = ctx.message.server
             channel = self.findChannel(server)
-            await self.bot.delete_channel(server, "mafia")
+            await self.bot.delete_channel(channel)
         except Exception:
             await self.bot.send_message(ctx.message.channel, "Error")
     
@@ -178,7 +185,7 @@ class mafia:
             if saved == True:
                 story1 = story.storyTime("alive", self.victim)
             else:
-                story1 = story.story("dead", self.victim)
+                story1 = story.storyTime("dead", self.victim)
             await self.bot.send_message(channel, story1)
 
             await self.bot.send_message(channel, "Now I'll give you guys 2 min to talk.")
@@ -230,10 +237,6 @@ class mafia:
                     await self.bot.send_message(channel, "No one was hanged.")        
 
 
-                    
-
-
-
     
     @commands.command(pass_context = True)
     async def helpM(self, ctx):
@@ -262,6 +265,7 @@ class mafia:
         embed.add_field(name = "/save #", value = "Doctor's command. A list of people will be shown with assigned numbers.", inline = False)
         embed.add_field(name = "/inspect #", value = "Detective's command. A list of people will be shown with assigned numbers.", inline = False)
         await self.bot.send_message(ctx.message.author, embed = embed)
+
     def findChannel(self, server):
         for item in server.channels:
             if item.name == 'mafia':

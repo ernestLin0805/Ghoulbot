@@ -2,6 +2,7 @@ import os
 import discord
 from discord.ext import commands
 import random
+
 class glob:
     def __init__(self, bot, playerL):
         global gameID

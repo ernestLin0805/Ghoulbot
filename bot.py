@@ -10,7 +10,7 @@ import youtube_dl
 bot = commands.Bot(command_prefix='/')
 bot.remove_command('help')
 
-extensions = ['economy', 'test', 'music', 'rpg']
+extensions = ['economy', 'test', 'music', 'rpg', 'mafia']
 players = {}
 currency_type = "<:wood:478383029891498006>"
 @bot.event
@@ -117,6 +117,9 @@ if __name__ == '__main__':
         try:
             if(extension == 'rpg'):
                 bot.load_extension(f"RPG.{extension}")
+
+            if(extension == "mafia"):
+                bot.load_extension(f"MAFIA.{extension}")
             else:
                 bot.load_extension(extension)
         except Exception as error:
