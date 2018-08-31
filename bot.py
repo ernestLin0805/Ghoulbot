@@ -10,7 +10,7 @@ import youtube_dl
 bot = commands.Bot(command_prefix='/')
 bot.remove_command('help')
 
-extensions = ['economy', 'test', 'music', 'rpg', 'mafia']
+extensions = ['economy', 'test', 'music', 'mafia']
 players = {}
 currency_type = "<:wood:478383029891498006>"
 @bot.event
@@ -43,6 +43,29 @@ async def clear(ctx, amount=100):
         await bot.say("You don't have permission.")
 
 @bot.command(pass_context = True)
+async def pfp(ctx, user: discord.Member):
+    embed = discord.Embed(title = "{}'s profile picture".format(user.name), colour = discord.Colour.red())
+    embed.set_image(url = user.avatar_url)
+    embed.set_author(name = "Ghoulbot", icon_url = "https://cdn.discordapp.com/avatars/467177408164921345/cfc1fb121a927ad86af081258a2dd715.webp?size=1024")
+    await bot.say(embed = embed)
+
+
+@bot.command(pass_context = True)
+async def meme(ctx):
+    memes = ["https://www.happybirthdaycake2015.com/wp-content/uploads/2017/06/Yeahnofuninpostingthingsthatonlyacouple_d805e168786492413db55fa638b2e53f-min.jpg", 
+    "https://memegenerator.net/img/instances/49289201.jpg", "https://i.imgflip.com/256b8v.jpg", "https://i.redditmedia.com/AMPuQykI24ov_0WNA7dpO2R-tkFNUDIESl0jXfcJNMU.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=640&s=65895f4af218ab466c655eb57343f786",
+    "https://i.redditmedia.com/7dglmuE019cCQ72KW6n1tNHA9XeK-UWLxgBHm1V9kmU.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=640&s=a9cae8ef1d1e2698db0ebff816ecc753", "https://i.redd.it/u4xlofoem5f11.jpg",
+    "https://i.redd.it/m09g4wt8u8e11.jpg", "https://i.redd.it/2xnvnwcir3d11.jpg", "https://i.redd.it/tlubfe0w7ti11.jpg", "https://i.redditmedia.com/FYkUQlKnWfnoBbqteq7OaVnberfInkXZWyKcjEeFvS0.jpg?s=058fda9c5d810a633a5a637f7dccdbc4", "https://i.redd.it/r42y3osjla811.jpg",
+    "https://i.redditmedia.com/rkrfvVfNc7ZIN6oGVseDwhAIRAYhW-WHchj0r10KMU4.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=640&s=fcef99b16e084726aa7497e33f80d976", 
+    "https://i.redditmedia.com/94FuzvGmoJ9h0CfTRYzMVOmoEXny4ZVv7YD0qxQLJZg.jpg?s=c1f32a89c16aa47cc34bfa5c9886566e", "https://i.redd.it/z65636v2av011.jpg",
+    "https://i.redd.it/myj047rr74911.jpg", "https://i.redditmedia.com/U0bUinXrLPslufgq5ZtLWIoeK3ktkksJhTdPEsyYZhQ.png?fit=crop&crop=faces%2Centropy&arh=2&w=640&s=f385985d5627537711ef40570038ff28", "https://i.redditmedia.com/dMrwTjgVImKI0zMx-QAuYcrMp8nI-zP1QIM0TnI1B1Q.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=640&s=c882d430ac8283ed89d3537644d0b364",
+     "https://i.redditmedia.com/fvB-VWtZsCmBa2WO4hKx6bfzGRZzl9c5hflhbgvaGKI.jpg?s=d403dc5fe8c0ccefef4b6db9eadb829e", "http://memecrunch.com/meme/BI6WW/calc-memes/image.jpg", "https://i.imgur.com/UWbVzuZ.jpg",
+     "https://i.imgur.com/63WHqcc.jpg"]
+    thing = random.choice(memes)
+    embed = discord.Embed(title = "Meme generator", colour = discord.Colour.blue())
+    embed.set_image(url = thing)
+    await bot.say(embed = embed)
+@bot.command(pass_context = True)
 async def test(ctx):
     channel = ctx.message.channel
     await bot.send_file(channel, os.getcwd() + r'\LinkCharacters\Assasin.png')
@@ -73,9 +96,9 @@ async def rank(ctx):
     secondName = server.get_member(secondid).name
     thirdName = server.get_member(thirdid).name
     display1 = discord.Embed(title = "Ranking", colour = discord.Colour.green())
-    display1.add_field(name = "#1: {}".format(firstName), value = "{} {}".format(first, currency_type), inline = True)
-    display1.add_field(name = "#2: {}".format(secondName), value = "{} {}".format(second, currency_type), inline = True)
-    display1.add_field(name = "#3: {}".format(thirdName), value = "{} {}".format(third, currency_type), inline = True)
+    display1.add_field(name = "#1: {}".format(firstName), value = "{} {}".format(first, currency_type), inline = False)
+    display1.add_field(name = "#2: {}".format(secondName), value = "{} {}".format(second, currency_type), inline = False)
+    display1.add_field(name = "#3: {}".format(thirdName), value = "{} {}".format(third, currency_type), inline = False)
     display1.set_thumbnail(url = "https://poetsandquants.com/wp-content/uploads/2017/11/Rankingillo.jpeg")
     await bot.send_message(ctx.message.channel, embed = display1)
     

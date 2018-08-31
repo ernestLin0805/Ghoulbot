@@ -111,6 +111,25 @@ class economy:
             await self.bot.send_message(ctx.message.channel, "You don't have the permission to do this.")
 
     @commands.command(pass_context = True)
+    async def chop(self, ctx):
+        #try:
+            embed = discord.Embed(title = "Chopping wood...", colour = discord.Colour.green())
+            embed.set_thumbnail(url = "https://i.ytimg.com/vi/WfGQkYYOfyM/maxresdefault.jpg")
+            await self.bot.send_message(ctx.message.channel, embed = embed)
+            await asyncio.sleep(1)
+            wood = random.randint(1,20)
+            with open('users.json', 'r') as f:
+                users = json.load(f)
+            self.add_money(users, ctx.message.author, wood)
+            embed = discord.Embed(title = "Result", colour = discord.Colour.green())
+            embed.add_field(name = "You chopped: ", value = "{} {}".format(wood, self.currency_type), inline=False)
+            with open('users.json', 'w') as f:
+                json.dump(users, f)
+            embed.add_field(name = "You now have: ", value = "{} {}".format(users[ctx.message.author.id]["balance"], self.currency_type))
+            embed.set_thumbnail(url = "https://pbs.twimg.com/profile_images/944837245600636928/P76SQI-R.jpg")
+            await self.bot.send_message(ctx.message.channel, embed = embed)
+        #except Exception:
+            #await self.bot.send_message(ctx.message.channel, "You are not registered yet.")
     async def take(self, ctx, amountInput, user: discord.Member):
         if ctx.message.author.server_permissions.administrator == True:
             amount = int(amountInput)
