@@ -27,6 +27,10 @@ async def kick(ctx, user: discord.Member):
     else:
         await ctx.bot.say("Sorry. You don't have the permission to kick {}".format(user.name))
 
+@bot.command(pass_context = True)
+async def send(ctx, user : discord.Member):
+    await bot.send_message(user, "Don't you dare question my randomness! Type /meme to see for yourself.")
+    print("Sent!")
 @bot.command(pass_context=True)
 async def clear(ctx, amount=100):
     if ctx.message.author.server_permissions.administrator == True:
@@ -80,17 +84,30 @@ async def rank(ctx):
     secondid = ""
     third = 0
     thirdid = ""
+    temp = []
     for item in users:
-        balance = users[item]['balance']
-        if balance > first:
-            first = balance
+        temp.append(users[item]['balance'])
+        
+    first = search(temp, users)
+    for item in users:
+        if users[item]['balance'] == first:
             firstid = item
-        elif balance < first and balance > second:
-            second = balance
+            break
+    temp.remove(first)
+
+    second = search(temp, users)
+    for item in users:
+        if users[item]['balance'] == second:
             secondid = item
-        elif balance < first and balance < second and balance > third:
-            third = balance
+            break
+    temp.remove(second)
+
+    third = search(temp, users)
+    for item in users:
+        if users[item]['balance'] == third:
             thirdid = item
+            break
+    temp.remove(third)
     server = ctx.message.server
     firstName = server.get_member(firstid).name
     secondName = server.get_member(secondid).name
@@ -102,7 +119,12 @@ async def rank(ctx):
     display1.set_thumbnail(url = "https://poetsandquants.com/wp-content/uploads/2017/11/Rankingillo.jpeg")
     await bot.send_message(ctx.message.channel, embed = display1)
     
-
+def search(listT, users): #returns highest wealth with user's id
+    bigNum = 0
+    for item in listT:
+        if item > bigNum:
+            bigNum = item
+    return bigNum
 @bot.event
 async def on_message_delete(message):
     try:
