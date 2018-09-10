@@ -71,8 +71,10 @@ async def meme(ctx):
     await bot.say(embed = embed)
 @bot.command(pass_context = True)
 async def test(ctx):
-    channel = ctx.message.channel
-    await bot.send_file(channel, os.getcwd() + r'\LinkCharacters\Assasin.png')
+    msg = await bot.wait_for_message(channel = ctx.message.channel)
+    if msg.author == ctx.message.author:
+        await bot.say("Hi")
+
 
 @bot.command(pass_context = True)
 async def rank(ctx):
@@ -128,10 +130,16 @@ def search(listT, users): #returns highest wealth with user's id
 @bot.event
 async def on_message_delete(message):
     try:
-        fmt = '{0.author.name} has deleted the message:\n"{0.content}" \nfrom {0.channel}'
-        await bot.send_message(discord.Object(id='467451291980005376'), fmt.format(message))
+        if message.channel.id != "467451291980005376":
+            fmt = '{0.author.name} has deleted the message:\n"{0.content}" \nfrom {0.channel}'
+            await bot.send_message(discord.Object(id='467451291980005376'), fmt.format(message))
     except Exception as error:
         await bot.say("{}".format(error))
+
+@bot.event
+async def on_message(message):
+    if message.author != bot.user:
+        await bot.process_commands(message)
 @bot.event
 async def on_member_remove(member):
     await bot.say("{} has left the discord".format(member.name))
