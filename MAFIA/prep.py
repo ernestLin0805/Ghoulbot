@@ -31,19 +31,28 @@ class prepare:
         for _ in range(mafiaCount):
             self.setRole("mafia", unassignedPlayers)
 
-        doctorCount = 0 # see above
+        doctorCount = 1 # see above
         for _ in range(doctorCount):
             self.setRole("doctor", unassignedPlayers)
 
-        detectiveCount = 0 # see above
+        detectiveCount = 1 # see above
         for _ in range(detectiveCount):
             self.setRole("detective", unassignedPlayers)
 
         chance = self.randInt(10, 100) # Determine if there will be a politician in this game
         if chance == True:
-            politicianCount = 1 # see above
-            for _ in range(politicianCount):
-                self.setRole("politician", unassignedPlayers)
+            if len(self.mafiaPlayers.items()) > 5:
+                politicianCount = 1 # see above
+                for _ in range(politicianCount):
+                    self.setRole("politician", unassignedPlayers)
+
+        if len(self.mafiaPlayers.items()) > 6:
+            chance = self.randInt(40, 100)
+            if chance == True:
+                self.setRole("suspect", unassignedPlayers)
+        
+        for _ in range(len(unassignedPlayers)):
+            self.setRole("villager", unassignedPlayers)
             
         # WARNING: Number of people in the game needs to be higher than the sum of the _____counts
         # Ex. mafiaCount + doctorCount + detectiveCount + politicianCount = 4, so if there are more
